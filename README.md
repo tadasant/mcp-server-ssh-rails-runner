@@ -42,8 +42,8 @@ Add to your Claude Desktop configuration:
 {
 	"mcpServers": {
 		"ssh-rails-runner": {
-			"command": "node",
-			"args": ["path/to/build/index.js"],
+			"command": "npx",
+			"args": ["mcp-server-ssh-rails-runner"],
 			"env": {
 				"SSH_HOST": "your.remote.host",
 				"SSH_USER": "your_ssh_user",
