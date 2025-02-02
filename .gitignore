@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Build
+build/
+
+# Environment
+.env
+
+# OS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+src/test.ts

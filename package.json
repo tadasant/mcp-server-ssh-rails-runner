@@ -1,0 +1,35 @@
+{
+  "name": "mcp-server-ssh-rails-runner",
+  "version": "0.0.1",
+  "description": "MCP server for remote Rails console execution via SSH",
+  "main": "build/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/index.js",
+    "dev": "tsc -w"
+  },
+  "author": "Tadas Antanavicius",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tadasant/mcp-server-ssh-rails-runner.git"
+  },
+  "keywords": [
+    "mcp",
+    "mcp server",
+    "rails",
+    "ssh",
+    "console"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "dotenv": "^16.4.7",
+    "node-ssh": "^13.2.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "typescript": "^5.3.3"
+  }
+}
