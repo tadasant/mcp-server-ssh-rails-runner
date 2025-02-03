@@ -1,0 +1,33 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required:
+      - sshHost
+      - sshUser
+      - sshPrivateKeyPath
+      - railsWorkingDir
+    properties:
+      sshHost:
+        type: string
+        description: The remote host to connect to via SSH.
+      sshUser:
+        type: string
+        description: The SSH username.
+      sshPrivateKeyPath:
+        type: string
+        description: The path to the SSH private key.
+      railsWorkingDir:
+        type: string
+        description: The working directory of the Rails application on the remote host.
+      projectNameAsContext:
+        type: string
+        default: ""
+        description: The project name used as context.
+  commandFunction:
+    # A function that produces the CLI command to start the MCP on stdio.
+    |-
+    config => ({ command: 'node', args: ['build/index.js'], env: { SSH_HOST: config.sshHost, SSH_USER: config.sshUser, SSH_PRIVATE_KEY_PATH: config.sshPrivateKeyPath, RAILS_WORKING_DIR: config.railsWorkingDir, PROJECT_NAME_AS_CONTEXT: config.projectNameAsContext || '' } })
