@@ -1,6 +1,6 @@
 {
   "name": "mcp-server-ssh-rails-runner",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "MCP server for remote Rails console execution via SSH",
   "main": "build/index.js",
   "type": "module",
