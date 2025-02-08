@@ -12,7 +12,7 @@ export type ExecuteReadOnlyArgs = {
 export const executeReadOnlyToolDefinition = {
 	name: "execute_read_only",
 	description:
-		"Executes read-only Rails console operations safely" +
+		"Executes read-only Rails console operations safely. Every command is its own isolated session - you cannot use variables across commands." +
 		(process.env.PROJECT_NAME_AS_CONTEXT
 			? ` - used for the project: ${process.env.PROJECT_NAME_AS_CONTEXT}`
 			: ""),

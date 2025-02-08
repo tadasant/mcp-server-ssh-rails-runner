@@ -17,7 +17,7 @@ export type DryRunMutateArgs = {
 export const dryRunMutateToolDefinition = {
 	name: "dry_run_mutate",
 	description:
-		"Plans and validates potential Rails mutations without executing them" +
+		"Plans and validates potential Rails mutations without executing them. Every command is its own isolated session - you cannot use variables across commands." +
 		(process.env.PROJECT_NAME_AS_CONTEXT
 			? ` - used for the project: ${process.env.PROJECT_NAME_AS_CONTEXT}`
 			: ""),
@@ -27,7 +27,7 @@ export const dryRunMutateToolDefinition = {
 			mutate_code: {
 				type: "string",
 				description:
-					"The Ruby code to be analyzed for mutation (e.g., 'User.find(1).update(name: \"New Name\")')",
+					"The Ruby code to be analyzed for mutation (e.g., 'User.find(1).update(name: \"New Name\")').",
 			},
 			dry_run_code: {
 				type: "string",
@@ -87,7 +87,7 @@ export async function dryRunMutate(
 				},
 				{
 					type: "text",
-					text: "To execute this mutation, use the execute_mutate tool with the provided snippet ID after informing the user of the analysis and getting confirmation that they want to proceed.",
+					text: "To execute this mutation, use the execute_mutate tool with the provided snippet ID after informing the user of the analysis and getting confirmation that they want to proceed. Please make sure to reformat both the mutate code and the dry run code in a pretty way and present it to the user for review to audit your process.",
 				},
 			],
 		};

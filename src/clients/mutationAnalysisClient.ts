@@ -25,12 +25,12 @@ export class MutationAnalysisClient {
 	private analyzePotentialRisks(code: string): string[] {
 		const risks: string[] = [];
 
-		if (code.toLowerCase().includes("delete")) {
-			risks.push("Data deletion risk");
-		}
-		if (code.toLowerCase().includes("update all")) {
-			risks.push("Mass update risk");
-		}
+		// if (code.toLowerCase().includes("delete")) {
+		// 	risks.push("Data deletion risk");
+		// }
+		// if (code.toLowerCase().includes("update all")) {
+		// 	risks.push("Mass update risk");
+		// }
 		// Add more risk analysis as needed
 
 		return risks;
