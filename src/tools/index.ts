@@ -1,17 +1,28 @@
 export {
-	dryRunMutate,
-	type DryRunMutateArgs,
-	dryRunMutateToolDefinition,
-} from "./dryRunMutate.js";
+	prepareCodeSnippet,
+	type PrepareCodeSnippetArgs,
+	prepareCodeSnippetToolDefinition,
+} from "./prepareCodeSnippet.js";
 
 export {
-	executeMutate,
-	type ExecuteMutateArgs,
-	executeMutateToolDefinition,
-} from "./executeMutate.js";
+	executeCodeSnippetReadOnly,
+	type ExecuteCodeSnippetReadOnlyArgs,
+	executeCodeSnippetReadOnlyToolDefinition,
+} from "./executeCodeSnippetReadOnly.js";
 
 export {
-	executeReadOnly,
-	type ExecuteReadOnlyArgs,
-	executeReadOnlyToolDefinition,
-} from "./executeReadOnly.js";
+	executeCodeSnippetMutate,
+	type ExecuteCodeSnippetMutateArgs,
+	executeCodeSnippetMutateToolDefinition,
+} from "./executeCodeSnippetMutate.js";
+
+export {
+	getCodeSnippet,
+	type GetCodeSnippetArgs,
+	getCodeSnippetToolDefinition,
+} from "./getCodeSnippet.js";
+
+export {
+	getAllCodeSnippets,
+	getAllCodeSnippetsToolDefinition,
+} from "./getAllCodeSnippets.js";
