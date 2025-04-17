@@ -35,7 +35,7 @@ export const prepareCodeSnippetToolDefinition = {
 			},
 			description: {
 				type: "string",
-				description: "An optional description for the code snippet.",
+				description: "An extremely detailed description of the code snippet. Give context for why, what, ideas for when it will and will not be useful. Assume the reader of this description has no context besides this is somehow related to the codebase at hand.",
 			},
 		},
 		required: ["name", "type", "code"],
