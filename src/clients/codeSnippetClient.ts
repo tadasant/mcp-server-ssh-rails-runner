@@ -6,7 +6,7 @@ import * as os from "os";
 type SnippetType = "readOnly" | "mutate";
 
 interface CodeSnippet {
-	id: string; // Will be query_<name>
+	id: string; // Will be code_snippet_<name>
 	name: string; // User-provided name
 	code: string;
 	description: string;
@@ -38,16 +38,16 @@ export class CodeSnippetClient {
 	// Generates the expected *.rb filename
 	private getSnippetFilename(name: string): string {
 		const sanitizedName = name.replace(/[^a-zA-Z0-9_-]/g, "_") || "unnamed";
-		return `query_${sanitizedName}.rb`; // Changed extension to .rb
+		return `code_snippet_${sanitizedName}.rb`; // Changed extension to .rb
 	}
 
 	// Generates the snippet ID from the name
 	private getSnippetId(name: string): string {
 		const filename = this.getSnippetFilename(name);
-		return path.parse(filename).name; // Extracts 'query_<sanitizedName>'
+		return path.parse(filename).name; // Extracts 'code_snippet_<sanitizedName>'
 	}
 
-	// Generates the full file path for a given query name
+	// Generates the full file path for a given code snippet name
 	public getSnippetFilePath(name: string): string {
 		const filename = this.getSnippetFilename(name);
 		return path.join(this.codeSnippetDirectory, filename);
@@ -109,13 +109,13 @@ export class CodeSnippetClient {
 		const id = this.getSnippetId(name);
 		const filePath = this.getSnippetFilePath(name);
 		const createdAt = new Date();
-		const finalDescription = description || `Query prepared on ${createdAt.toISOString()}`;
+		const finalDescription = description || `CodeSnippet prepared on ${createdAt.toISOString()}`;
 
 		// Check existence (using .rb path)
 		try {
 			await fs.access(filePath);
 			throw new Error(
-				`Query name "${name}" already exists as ${path.basename(filePath)}. Please choose a different name or delete the existing file.`,
+				`CodeSnippet name "${name}" already exists as ${path.basename(filePath)}. Please choose a different name or delete the existing file.`,
 			);
 		} catch (error) {
 			if (error instanceof Error && error.message.includes("already exists")) {
@@ -151,10 +151,10 @@ export class CodeSnippetClient {
 
 	// Gets snippet by ID by parsing the .rb file
 	async getCodeSnippet(id: string): Promise<CodeSnippet> {
-		if (!id.startsWith("query_")) {
+		if (!id.startsWith("code_snippet_")) {
 			throw new Error(`Invalid snippet ID format: ${id}`);
 		}
-		const name = id.substring("query_".length);
+		const name = id.substring("code_snippet_".length);
 		const filePath = this.getSnippetFilePath(name);
 		try {
 			const content = await fs.readFile(filePath, "utf-8");
@@ -177,7 +177,7 @@ export class CodeSnippetClient {
 		try {
 			const files = await fs.readdir(this.codeSnippetDirectory);
 			for (const file of files) {
-				if (file.endsWith(".rb") && file.startsWith("query_")) { // Look for .rb files
+				if (file.endsWith(".rb") && file.startsWith("code_snippet_")) { // Look for .rb files
 					const snippetId = path.parse(file).name;
 					try {
 						// getCodeSnippet now handles reading and parsing the .rb file

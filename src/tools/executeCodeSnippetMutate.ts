@@ -3,14 +3,14 @@ import { CodeSnippetClient } from "../clients/codeSnippetClient.js";
 import { SSHRailsClient } from "../clients/sshRailsClient.js";
 
 // Define args type directly using an interface
-export interface ExecuteQueryMutateArgs {
+export interface ExecuteCodeSnippetMutateArgs {
 	uri: string;
 }
 
-export const executeQueryMutateToolDefinition = {
-	name: "execute_query_mutate",
+export const executeCodeSnippetMutateToolDefinition = {
+	name: "execute_code_snippet_mutate",
 	description:
-		"Executes a previously prepared **mutate** query snippet. Executes the code directly. There is no dry run. Double-check the URI and ensure it points to a snippet marked as 'mutate'." +
+		"Executes a previously prepared **mutate** code snippet. Executes the code directly. There is no dry run. Double-check the URI and ensure it points to a snippet marked as 'mutate'." +
 		(process.env.PROJECT_NAME_AS_CONTEXT
 			? ` - used for the project: ${process.env.PROJECT_NAME_AS_CONTEXT}`
 			: ""),
@@ -21,15 +21,15 @@ export const executeQueryMutateToolDefinition = {
 				type: "string",
 				format: "uri",
 				description:
-					"The file URI (e.g., 'file:///path/to/query_name.json') of the prepared **mutate** query snippet.",
+					"The file URI (e.g., 'file:///path/to/code_snippet_name.json') of the prepared **mutate** code snippet.",
 			},
 		},
 		required: ["uri"],
 	},
 };
 
-export async function executeQueryMutate(
-	args: ExecuteQueryMutateArgs,
+export async function executeCodeSnippetMutate(
+	args: ExecuteCodeSnippetMutateArgs,
 	sshRailsClient: SSHRailsClient,
 	codeSnippetClient: CodeSnippetClient,
 ) {
@@ -41,7 +41,7 @@ export async function executeQueryMutate(
 		const requestedFilePath = validatedArgs.uri.replace("file://", "");
 		snippetId = path.parse(requestedFilePath).name;
 
-		if (!snippetId || !snippetId.startsWith("query_")) {
+		if (!snippetId || !snippetId.startsWith("code_snippet_")) {
 			throw new Error(`Invalid snippet URI format: ${validatedArgs.uri}`);
 		}
 
@@ -57,7 +57,7 @@ export async function executeQueryMutate(
 		// 2. Verify snippet type
 		if (snippet.type !== "mutate") {
 			throw new Error(
-				`Cannot execute: Snippet "${snippetId}" is marked as type '${snippet.type}', not 'mutate'. Use the correct execution tool or prepare a new 'mutate' query.`,
+				`Cannot execute: Snippet "${snippetId}" is marked as type '${snippet.type}', not 'mutate'. Use the correct execution tool or prepare a new 'mutate' code snippet.`,
 			);
 		}
 
@@ -71,7 +71,7 @@ export async function executeQueryMutate(
 			content: [
 				{
 					type: "text",
-					text: `Mutation query snippet "${snippetId}" executed successfully.`,
+					text: `Mutation code snippet "${snippetId}" executed successfully.`,
 				},
 				{
 					type: "text",
@@ -87,12 +87,12 @@ export async function executeQueryMutate(
 			content: [
 				{
 					type: "text",
-					text: `Failed to execute mutation query${snippetId ? ` "${snippetId}"` : ""}: ${errorMessage}`,
+					text: `Failed to execute mutation code snippet${snippetId ? ` "${snippetId}"` : ""}: ${errorMessage}`,
 				},
 			],
 			error: {
 				type: "tool_error",
-				message: `Failed to execute mutation query${snippetId ? ` "${snippetId}"` : ""}: ${errorMessage}`,
+				message: `Failed to execute mutation code snippet${snippetId ? ` "${snippetId}"` : ""}: ${errorMessage}`,
 			},
 		};
 	}

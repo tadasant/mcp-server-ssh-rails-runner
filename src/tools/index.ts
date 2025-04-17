@@ -1,17 +1,28 @@
 export {
-	prepareQuery,
-	type PrepareQueryArgs,
-	prepareQueryToolDefinition,
-} from "./prepareQuery.js";
+	prepareCodeSnippet,
+	type PrepareCodeSnippetArgs,
+	prepareCodeSnippetToolDefinition,
+} from "./prepareCodeSnippet.js";
 
 export {
-	executeQueryReadOnly,
-	type ExecuteQueryReadOnlyArgs,
-	executeQueryReadOnlyToolDefinition,
-} from "./executeQueryReadOnly.js";
+	executeCodeSnippetReadOnly,
+	type ExecuteCodeSnippetReadOnlyArgs,
+	executeCodeSnippetReadOnlyToolDefinition,
+} from "./executeCodeSnippetReadOnly.js";
 
 export {
-	executeQueryMutate,
-	type ExecuteQueryMutateArgs,
-	executeQueryMutateToolDefinition,
-} from "./executeQueryMutate.js";
+	executeCodeSnippetMutate,
+	type ExecuteCodeSnippetMutateArgs,
+	executeCodeSnippetMutateToolDefinition,
+} from "./executeCodeSnippetMutate.js";
+
+export {
+	getCodeSnippet,
+	type GetCodeSnippetArgs,
+	getCodeSnippetToolDefinition,
+} from "./getCodeSnippet.js";
+
+export {
+	getAllCodeSnippets,
+	getAllCodeSnippetsToolDefinition,
+} from "./getAllCodeSnippets.js";

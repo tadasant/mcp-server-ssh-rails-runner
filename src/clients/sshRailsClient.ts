@@ -149,7 +149,7 @@ export class SSHRailsClient {
 	}
 
 	async executeMutate(filePath: string): Promise<string> {
-		// Assumes caller (executeQueryMutate tool) has confirmed user intent.
+		// Assumes caller (executeCodeSnippetMutate tool) has confirmed user intent.
 		const result = await this.executeCommand(filePath);
 		return this.parseResult(result);
 	}

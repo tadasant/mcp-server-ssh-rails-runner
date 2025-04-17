@@ -14,20 +14,29 @@ import path from "path";
 
 // Import new tools and definitions
 import {
-	prepareQuery,
-	prepareQueryToolDefinition,
-	PrepareQueryArgs,
-} from "./tools/prepareQuery.js";
+	prepareCodeSnippet,
+	prepareCodeSnippetToolDefinition,
+	PrepareCodeSnippetArgs,
+} from "./tools/prepareCodeSnippet.js";
 import {
-	executeQueryReadOnly,
-	executeQueryReadOnlyToolDefinition,
-	ExecuteQueryReadOnlyArgs,
-} from "./tools/executeQueryReadOnly.js";
+	executeCodeSnippetReadOnly,
+	executeCodeSnippetReadOnlyToolDefinition,
+	ExecuteCodeSnippetReadOnlyArgs,
+} from "./tools/executeCodeSnippetReadOnly.js";
 import {
-	executeQueryMutate,
-	executeQueryMutateToolDefinition,
-	ExecuteQueryMutateArgs,
-} from "./tools/executeQueryMutate.js";
+	executeCodeSnippetMutate,
+	executeCodeSnippetMutateToolDefinition,
+	ExecuteCodeSnippetMutateArgs,
+} from "./tools/executeCodeSnippetMutate.js";
+import {
+	getAllCodeSnippets,
+	getAllCodeSnippetsToolDefinition,
+} from "./tools/getAllCodeSnippets.js";
+import {
+	getCodeSnippet,
+	getCodeSnippetToolDefinition,
+	GetCodeSnippetArgs,
+} from "./tools/getCodeSnippet.js";
 
 // Load environment variables
 dotenv.config();
@@ -63,19 +72,19 @@ const server = new Server(
 			resources: {},
 		},
 		// Updated instructions for the new workflow
-		instructions: `This server allows you to prepare and execute Ruby code in a remote Rails environment via SSH using a two-step process:
+		instructions: `This server allows you to prepare and execute Ruby code in a remote Rails environment via SSH using a four-step process:
+    
+      1. **Get All Code Snippets:** Use the 'getAllCodeSnippets' tool to get a list of all the available code snippets that may already exist to fulfill your request.
+      
+      2. **Get Code Snippet:** If any of the available code snippets seems promising, use 'getCodeSnippet' to get the code snippet & its metadata so you can confirm whether you want to use it.
 
-      1.  **Prepare Query:** Use the 'prepareQuery' tool to draft your Ruby code. Provide a unique 'name' for the query, specify if it's 'readOnly' or 'mutate', and write the 'code'. This saves the query to a local file (which will be opened for review) and returns its file URI.
+      3.  **Prepare CodeSnippet:** If you haven't found an appropriate pre-existing code snippet, use the 'prepareCodeSnippet' tool to draft your Ruby code. Provide a unique 'name' for the code snippet, specify if it's 'readOnly' or 'mutate', and write the 'code'. This saves the code snippet to a local file and returns its file URI.
 
-      2.  **Execute Query:**
-          *   For **read-only** queries (verified as 'readOnly' type during preparation), use the 'executeQueryReadOnly' tool, providing the 'uri' from the prepare step. This tool performs an additional safety check to ensure the code looks read-only before running it.
-          *   For **mutating** queries (verified as 'mutate' type during preparation), FIRST **confirm with the user** that they have reviewed the code in the opened file and explicitly approve execution. THEN, use the **DANGEROUS** 'executeQueryMutate' tool, providing the 'uri'. This tool executes the code *directly* without further checks.
+      4.  **Execute CodeSnippet:**
+          *   For **read-only** queries (verified as 'readOnly' type during preparation), use the 'executeCodeSnippetReadOnly' tool, providing the 'uri' from the prepare step. This tool performs an additional safety check to ensure the code looks read-only before running it.
+          *   For **mutating** queries (verified as 'mutate' type during preparation), FIRST **confirm with the user** that they have reviewed the code in the opened file and explicitly approve execution. THEN, use the **DANGEROUS** 'executeCodeSnippetMutate' tool, providing the 'uri'. This tool executes the code *directly* without further checks.
 
-      **Workflow Summary:**
-      - Read-only: prepareQuery(type='readOnly') -> executeQueryReadOnly(uri)
-      - Mutate: prepareQuery(type='mutate') -> **USER REVIEW & CONFIRMATION** -> executeQueryMutate(uri)
-
-      Always ensure 'puts' is used in your Ruby code if you want to see the output of the query execution.
+      Always ensure 'puts' is used in your Ruby code if you want to see the output of the code snippet execution.
       `,
 	},
 );
@@ -84,9 +93,11 @@ const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
 	tools: [
 		// List new tools
-		prepareQueryToolDefinition,
-		executeQueryReadOnlyToolDefinition,
-		executeQueryMutateToolDefinition,
+		prepareCodeSnippetToolDefinition,
+		executeCodeSnippetReadOnlyToolDefinition,
+		executeCodeSnippetMutateToolDefinition,
+		getAllCodeSnippetsToolDefinition,
+		getCodeSnippetToolDefinition,
 	],
 }));
 
@@ -95,22 +106,28 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 	// Handle new tool calls
 	switch (name) {
-		case prepareQueryToolDefinition.name:
-			return prepareQuery(args as unknown as PrepareQueryArgs, codeSnippetClient);
+		case prepareCodeSnippetToolDefinition.name:
+			return prepareCodeSnippet(args as unknown as PrepareCodeSnippetArgs, codeSnippetClient);
 
-		case executeQueryReadOnlyToolDefinition.name:
-			return executeQueryReadOnly(
-				args as unknown as ExecuteQueryReadOnlyArgs,
+		case executeCodeSnippetReadOnlyToolDefinition.name:
+			return executeCodeSnippetReadOnly(
+				args as unknown as ExecuteCodeSnippetReadOnlyArgs,
 				sshRailsClient,
 				codeSnippetClient,
 			);
 
-		case executeQueryMutateToolDefinition.name:
-			return executeQueryMutate(
-				args as unknown as ExecuteQueryMutateArgs,
+		case executeCodeSnippetMutateToolDefinition.name:
+			return executeCodeSnippetMutate(
+				args as unknown as ExecuteCodeSnippetMutateArgs,
 				sshRailsClient,
 				codeSnippetClient,
 			);
+
+		case getAllCodeSnippetsToolDefinition.name:
+			return getAllCodeSnippets(codeSnippetClient);
+
+		case getCodeSnippetToolDefinition.name:
+			return getCodeSnippet(codeSnippetClient, args as unknown as GetCodeSnippetArgs);
 
 		default:
 			throw new Error(`Unknown tool: ${name}`);
@@ -124,7 +141,7 @@ server.setRequestHandler(ListResourcesRequestSchema, async () => {
 			// URI is already file://<path> from client
 			uri: `file://${snippet.filePath}`,
 			// Use snippet.name which is the user-provided name
-			name: `Query: ${snippet.name} (${snippet.type})`, // Include type in name
+			name: `CodeSnippet: ${snippet.name} (${snippet.type})`, // Include type in name
 			description: snippet.description,
 		})),
 	};
@@ -132,11 +149,11 @@ server.setRequestHandler(ListResourcesRequestSchema, async () => {
 
 server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
 	const filePath = request.params.uri.replace("file://", "");
-	// Extract ID (query_<name>) from the filename
+	// Extract ID (code_snippet_<name>) from the filename
 	const id = path.parse(filePath).name;
 
-	if (!id || !id.startsWith("query_")) {
-		throw new Error(`Invalid query snippet URI format: ${request.params.uri}`);
+	if (!id || !id.startsWith("code_snippet_")) {
+		throw new Error(`Invalid code snippet URI format: ${request.params.uri}`);
 	}
 
 	try {
@@ -148,8 +165,6 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
 					uri: request.params.uri,
 					// Return the Ruby code string
 					text: snippet.code,
-					// Indicate the content is Ruby code
-					mimeType: "text/x-ruby", // More specific mime type
 				},
 			],
 		};

@@ -64,29 +64,29 @@ If `CODE_SNIPPET_FILE_DIRECTORY` is not provided, snippets will be stored in a t
 
 The server now uses a Prepare -> Execute workflow:
 
-### `mcp_ssh_rails_runner_prepare_query`
+### `mcp_ssh_rails_runner_prepare_code_snippet`
 
 -   **Arguments**: `name` (string, for filename), `type` (enum: "readOnly" | "mutate"), `code` (string, Ruby code), `description` (string, optional).
--   **Function**: Saves the provided Ruby code to a local file named `query_<name>.json`, marks it as read-only or mutate, and opens the file for review.
+-   **Function**: Saves the provided Ruby code to a local file named `code_snippet_<name>.json`, marks it as read-only or mutate, and opens the file for review.
 -   **Returns**: The `file://` URI of the created snippet.
 
-### `mcp_ssh_rails_runner_execute_query_read_only`
+### `mcp_ssh_rails_runner_execute_code_snippet_read_only`
 
--   **Arguments**: `uri` (string, `file://` URI from `prepareQuery`).
--   **Function**: Reads the query snippet from the URI, verifies it's marked as `readOnly`, performs a safety check on the code, and executes it.
+-   **Arguments**: `uri` (string, `file://` URI from `prepareCodeSnippet`).
+-   **Function**: Reads the code snippet from the URI, verifies it's marked as `readOnly`, performs a safety check on the code, and executes it.
 -   **Returns**: The output of the Rails command.
 
-### `mcp_ssh_rails_runner_execute_query_mutate`
+### `mcp_ssh_rails_runner_execute_code_snippet_mutate`
 
--   **Arguments**: `uri` (string, `file://` URI from `prepareQuery`).
--   **Function**: **DANGER ZONE!** Reads the query snippet, verifies it's marked as `mutate`, and **executes it directly**. There is no dry run or further safety check within this tool.
+-   **Arguments**: `uri` (string, `file://` URI from `prepareCodeSnippet`).
+-   **Function**: **DANGER ZONE!** Reads the code snippet, verifies it's marked as `mutate`, and **executes it directly**. There is no dry run or further safety check within this tool.
 -   **Returns**: The output of the Rails command.
--   **Usage**: **ONLY CALL THIS AFTER THE USER HAS REVIEWED the prepared code (via the opened file from `prepareQuery`) AND EXPLICITLY CONFIRMED they want to execute the mutation.**
+-   **Usage**: **ONLY CALL THIS AFTER THE USER HAS REVIEWED the prepared code (via the opened file from `prepareCodeSnippet`) AND EXPLICITLY CONFIRMED they want to execute the mutation.**
 
 ## Security Considerations
 
 -   Only use with trusted SSH endpoints from your own local machine that is (temporarily) provided access to the remote environment.
--   **Crucially, always review the code saved by `prepareQuery` before executing any mutation with `executeQueryMutate`.** The responsibility for confirming mutations lies with the user and the calling AI.
+-   **Crucially, always review the code saved by `prepareCodeSnippet` before executing any mutation with `executeCodeSnippetMutate`.** The responsibility for confirming mutations lies with the user and the calling AI.
 
 ## License
 
