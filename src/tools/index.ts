@@ -1,17 +1,17 @@
 export {
-	dryRunMutate,
-	type DryRunMutateArgs,
-	dryRunMutateToolDefinition,
-} from "./dryRunMutate.js";
+	prepareQuery,
+	type PrepareQueryArgs,
+	prepareQueryToolDefinition,
+} from "./prepareQuery.js";
 
 export {
-	executeMutate,
-	type ExecuteMutateArgs,
-	executeMutateToolDefinition,
-} from "./executeMutate.js";
+	executeQueryReadOnly,
+	type ExecuteQueryReadOnlyArgs,
+	executeQueryReadOnlyToolDefinition,
+} from "./executeQueryReadOnly.js";
 
 export {
-	executeReadOnly,
-	type ExecuteReadOnlyArgs,
-	executeReadOnlyToolDefinition,
-} from "./executeReadOnly.js";
+	executeQueryMutate,
+	type ExecuteQueryMutateArgs,
+	executeQueryMutateToolDefinition,
+} from "./executeQueryMutate.js";
