@@ -60,7 +60,7 @@ Add to your Claude Desktop configuration:
 If `CODE_SNIPPET_FILE_DIRECTORY` is not provided, snippets will be stored in a temporary directory (e.g., `/tmp/mcp-ssh-rails-runner-code-snippets`).
 `PROJECT_NAME_AS_CONTEXT` is optional and helps identify the project context in tool descriptions.
 
-## Available Tools (New Workflow)
+## Available Tools
 
 The server now uses a Prepare -> Execute workflow:
 
