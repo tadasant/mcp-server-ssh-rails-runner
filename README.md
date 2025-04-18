@@ -1,5 +1,7 @@
 # MCP Server: SSH Rails Runner
 
+[![smithery badge](https://smithery.ai/badge/@tadasant/mcp-server-ssh-rails-runner)](https://smithery.ai/server/@tadasant/mcp-server-ssh-rails-runner)
+
 An MCP server that enables secure remote execution of Rails console commands via SSH. This server provides tools for both read-only operations and carefully managed mutations in a deployed Rails environment.
 
 This works great with Cursor. You can use Cursor Composer to pull in your Rails model files as context and then use the `execute_read_only`, `dry_run_mutate`, and `execute_mutate` tools to make changes to the database. No need to trudge through complicated Admin UI's to get your data wrangling and analysis done.
@@ -18,6 +20,15 @@ This works great with Cursor. You can use Cursor Composer to pull in your Rails 
 
 ## Installation
 
+### Installing via Smithery
+
+To install MCP Server: SSH Rails Runner for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@tadasant/mcp-server-ssh-rails-runner):
+
+```bash
+npx -y @smithery/cli install @tadasant/mcp-server-ssh-rails-runner --client claude
+```
+
+### Manual Installation
 ```bash
 npm install
 npm run build
