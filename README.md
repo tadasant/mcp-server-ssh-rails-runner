@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/mseep-audited.png)](https://mseep.ai/app/tadasant-mcp-server-ssh-rails-runner)
+
 # MCP Server: SSH Rails Runner
 
 An MCP server that enables secure remote execution of Rails console commands via SSH. This server provides tools for both read-only operations and carefully managed mutations in a deployed Rails environment.
